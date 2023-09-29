@@ -104,7 +104,7 @@ export class App extends Component {
           <Button handleLoadMore={handleLoadMore} />
         )}
         {isShowModal && (
-          <Modal largeImageURL={imageForModal} closeModal={closeModal} />
+          <Modal largeImageURL={imageForModal} onCloseModal={closeModal} />
         )}
       </Container>
     );

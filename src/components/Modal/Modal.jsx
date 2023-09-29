@@ -1,42 +1,83 @@
-import { Component } from 'react';
+import { useEffect, useCallback } from 'react';
+
 import { ModalOverlay, ModalWindow } from './Modal.styled';
 import { disablePageScroll, enablePageScroll } from 'scroll-lock';
 
-export class Modal extends Component {
-  componentDidMount() {
-    document.addEventListener('keydown', this.closeModalByEsc);
-    disablePageScroll();
-  }
+export const Modal = ({ largeImageURL, tags, onCloseModal }) => {
+  const closeModalByEsc = useCallback(
+    ({ code }) => {
+      if (code === 'Escape') onCloseModal();
+    },
+    [onCloseModal]
+  );
 
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.closeModalByEsc);
-    enablePageScroll();
-  }
-
-  closeModalByEsc = ({ code }) => {
-    if (code === 'Escape') this.props.closeModal();
+  const closeModal = ({ target, currentTarget }) => {
+    if (target === currentTarget) onCloseModal();
   };
 
-  closeModal = ({ target, currentTarget }) => {
-    if (target === currentTarget) this.props.closeModal();
-  };
-
-  preventImageClickClose = e => {
+  const preventImageClickClose = e => {
     e.stopPropagation();
   };
 
-  render() {
-    const { largeImageURL, tags, closeModal } = this.props;
-    return (
-      <ModalOverlay onClick={closeModal}>
-        <ModalWindow>
-          <img
-            src={largeImageURL}
-            alt={tags}
-            onClick={this.preventImageClickClose}
-          />
-        </ModalWindow>
-      </ModalOverlay>
-    );
-  }
-}
+  useEffect(() => {
+    document.addEventListener('keydown', closeModalByEsc);
+    disablePageScroll();
+
+    return () => {
+      document.removeEventListener('keydown', closeModalByEsc);
+      enablePageScroll();
+    };
+  }, [closeModalByEsc]);
+
+  return (
+    <ModalOverlay onClick={closeModal}>
+      <ModalWindow>
+        <img src={largeImageURL} alt={tags} onClick={preventImageClickClose} />
+      </ModalWindow>
+    </ModalOverlay>
+  );
+};
+
+//* ====== Old code before transitioning to hooks from class components. ======
+// import { Component } from 'react';
+// import { ModalOverlay, ModalWindow } from './Modal.styled';
+// import { disablePageScroll, enablePageScroll } from 'scroll-lock';
+
+// export class Modal extends Component {
+//   componentDidMount() {
+//     document.addEventListener('keydown', this.closeModalByEsc);
+//     disablePageScroll();
+//   }
+
+//   componentWillUnmount() {
+//     document.removeEventListener('keydown', this.closeModalByEsc);
+//     enablePageScroll();
+//   }
+
+//   closeModalByEsc = ({ code }) => {
+//     if (code === 'Escape') this.props.closeModal();
+//   };
+
+//   closeModal = ({ target, currentTarget }) => {
+//     if (target === currentTarget) this.props.closeModal();
+//   };
+
+//   preventImageClickClose = e => {
+//     e.stopPropagation();
+//   };
+
+//   render() {
+//     const { largeImageURL, tags, closeModal } = this.props;
+//     return (
+//       <ModalOverlay onClick={closeModal}>
+//         <ModalWindow>
+//           <img
+//             src={largeImageURL}
+//             alt={tags}
+//             onClick={this.preventImageClickClose}
+//           />
+//         </ModalWindow>
+//       </ModalOverlay>
+//     );
+//   }
+// }
