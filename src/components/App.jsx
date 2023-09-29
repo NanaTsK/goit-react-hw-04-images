@@ -34,7 +34,7 @@ export const App = () => {
   const [totalPage, setTotalPage] = useState(INITIAL_STATE.totalPage);
 
   useEffect(() => {
-    setImages([]);
+    setImages(INITIAL_STATE.images);
   }, []);
 
   const fetchInputImages = useCallback(async () => {
@@ -75,7 +75,7 @@ export const App = () => {
 
   useEffect(() => {
     setImages([]);
-    setPage(1);
+    setPage(INITIAL_STATE.page);
   }, [searchQuery]);
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export const App = () => {
     setSearchQuery(searchQuery);
     setPage(INITIAL_STATE.page);
     setImages(INITIAL_STATE.images);
-    setPage(INITIAL_STATE.totalPage);
+    setTotalPage(INITIAL_STATE.totalPage);
   };
 
   const handleLoadMore = () => {
