@@ -46,6 +46,7 @@ export const App = () => {
           `Sorry, there are no images matching your search query. Please try again.`,
           notifyInit
         );
+        setLoader(false);
         return;
       }
       const normalized = data.hits.map(
